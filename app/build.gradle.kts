@@ -55,6 +55,8 @@ dependencies {
     implementation ("androidx.compose.material:material-icons-extended:1.0.0-alpha10")
     implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation ("dev.chrisbanes.accompanist:accompanist-coil:0.6.1")
+    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation ("com.google.accompanist:accompanist-flowlayout:0.20.0")
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
