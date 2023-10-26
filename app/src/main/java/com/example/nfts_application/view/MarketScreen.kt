@@ -62,9 +62,6 @@ fun MarketScreen(navController: NavHostController){
             NFTsDetailsScreen()
         }
     }
-
-
-
 }
 
 @Composable

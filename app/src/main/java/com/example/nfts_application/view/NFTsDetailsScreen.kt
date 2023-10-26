@@ -1,29 +1,29 @@
 package com.example.nfts_application.view
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,6 +39,9 @@ import com.example.nfts_application.component.ETHPriceText
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun NFTsDetailsScreen(){
+
+    val openAlertDialog = remember { mutableStateOf(false) }
+
     LazyColumn(
 
     ){
@@ -86,7 +89,7 @@ fun NFTsDetailsScreen(){
 
             Spacer(modifier = Modifier.padding(8.dp))
 
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = { openAlertDialog.value = true }) {
                 Icon(imageVector= Icons.Filled.ShoppingCart, contentDescription = "", tint = Color.White)
                 Spacer(modifier = Modifier.padding(8.dp))
                 Text("Buy Now", color = Color.White, fontSize = 20.sp)
@@ -94,8 +97,40 @@ fun NFTsDetailsScreen(){
 
             Spacer(modifier = Modifier.padding(8.dp))
         }
+
+        item{
+            if(openAlertDialog.value){
+                BuyNFTsConfirmationAlertDialog(openAlertDialog)
+            }else{
+
+            }
+        }
     }
 }
+
+@Composable
+fun BuyNFTsConfirmationAlertDialog(openAlertDialogStatus: MutableState<Boolean>){
+    AlertDialog(
+        onDismissRequest = {},
+        confirmButton = {
+           Button(onClick = { /*TODO*/ }) {
+               Text("Confirm", color = Color.White, fontSize = 14.sp)
+           }
+        },
+        dismissButton = {
+            Button(onClick = { openAlertDialogStatus.value = false }) {
+                Text("Cancel", color = Color.White, fontSize = 14.sp)
+            }
+        },
+        title = {Text("Confirmation")},
+        text = {Text("Are you sure buy this NFTs")},
+        containerColor = MaterialTheme.colorScheme.secondary,
+        titleContentColor = Color.White,
+        textContentColor = MaterialTheme.colorScheme.onSecondary
+
+    )
+}
+
 
 
 

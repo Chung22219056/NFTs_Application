@@ -52,6 +52,7 @@ import com.example.nfts_application.view.HomeScreen
 import com.example.nfts_application.view.MarketScreen
 import com.example.nfts_application.view.NFTsDetailsScreen
 import com.example.nfts_application.view.ProfileScreen
+import com.example.nfts_application.view.SearchScreen
 import kotlinx.coroutines.launch
 
 
@@ -169,6 +170,7 @@ fun ScaffoldScreen() {
                 when(selectedItem){
                     0 -> HomeScreen(navController)
                     1 -> MarketScreen(navController)
+                    2 -> SearchScreen(navController)
                     3 -> ProfileScreen(navController)
                 }
             }
