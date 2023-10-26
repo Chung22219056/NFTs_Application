@@ -25,11 +25,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import com.example.nfts_application.R
 
 @Composable
-fun ProfileScreen(navHostController: NavHostController){
+fun ProfileScreen(navController: NavHostController){
+    NavHost(navController = navController, startDestination = "profileHomeScreen"){
+        composable("profileHomeScreen"){
+            ProfileHomeScreen()
+        }
+    }
 
+
+}
+
+@Composable
+fun ProfileHomeScreen(){
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -41,7 +53,6 @@ fun ProfileScreen(navHostController: NavHostController){
         Spacer(modifier = Modifier.padding(14.dp))
         WalletCard()
     }
-
 }
 @Composable
 fun WalletCard(){

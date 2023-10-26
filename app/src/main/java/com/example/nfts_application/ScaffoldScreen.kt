@@ -49,6 +49,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.nfts_application.ui.theme.NFTs_ApplicationTheme
 import com.example.nfts_application.view.HomeScreen
+import com.example.nfts_application.view.MarketScreen
 import com.example.nfts_application.view.NFTsDetailsScreen
 import com.example.nfts_application.view.ProfileScreen
 import kotlinx.coroutines.launch
@@ -167,6 +168,7 @@ fun ScaffoldScreen() {
             ) {
                 when(selectedItem){
                     0 -> HomeScreen(navController)
+                    1 -> MarketScreen(navController)
                     3 -> ProfileScreen(navController)
                 }
             }

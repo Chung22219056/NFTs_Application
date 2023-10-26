@@ -32,6 +32,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import coil.compose.AsyncImage
 import com.example.nfts_application.R
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -123,5 +124,20 @@ fun NFT_Card(navController: NavController){
 
             Text("Travel Monkey Club", fontSize = 18.sp, fontWeight = FontWeight.Bold,maxLines = 1, overflow = TextOverflow.Ellipsis )
         }
+    }
+}
+
+@Composable
+fun TopSellerCard(){
+    ElevatedCard (
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 6.dp
+        ),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondary,
+        ),
+    ){
+
+
     }
 }

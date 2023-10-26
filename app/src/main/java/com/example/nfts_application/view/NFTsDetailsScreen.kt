@@ -34,6 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nfts_application.R
+import com.example.nfts_application.component.ETHPriceText
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -97,19 +98,4 @@ fun NFTsDetailsScreen(){
 }
 
 
-@Composable
-fun ETHPriceText(price: String){
-    Row(
-        verticalAlignment=Alignment.CenterVertically
-    ){
-        Image(
-            modifier = Modifier
-                .size(32.dp),
-            painter = painterResource(id = R.drawable.eth),
-            contentDescription = "",
-            contentScale = ContentScale.Crop
-        )
-        Text(price, fontSize = 18.sp)
-    }
 
-}
