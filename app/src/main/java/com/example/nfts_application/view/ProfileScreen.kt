@@ -1,5 +1,7 @@
 package com.example.nfts_application.view
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -20,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -29,6 +32,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.nfts_application.R
+import io.metamask.androidsdk.Dapp
+import io.metamask.androidsdk.Ethereum
+import io.metamask.androidsdk.RequestError
+import io.metamask.androidsdk.TAG
 
 @Composable
 fun ProfileScreen(navController: NavHostController){
@@ -55,13 +62,17 @@ fun ProfileHomeScreen(){
         WalletCard()
     }
 }
+
+
 @Composable
 fun WalletCard(){
+    val context: Context = LocalContext.current
+
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.secondary,
         ),
-        modifier = Modifier.fillMaxWidth().clickable {  }
+        modifier = Modifier.fillMaxWidth().clickable { ConnectMetamask(context) }
     ){
         Row (
             modifier = Modifier.padding(12.dp),
@@ -77,5 +88,23 @@ fun WalletCard(){
 
         }
 
+    }
+}
+
+
+
+fun ConnectMetamask(context: Context) {
+
+    val ethereum = Ethereum(context)
+
+    val dapp = Dapp("Droid Dapp", "https://droiddapp.com")
+
+    // This is the same as calling eth_requestAccounts
+    ethereum.connect(dapp) { result ->
+        if (result is RequestError) {
+            Log.e(TAG, "Ethereum connection error: ${result.message}")
+        } else {
+            Log.d(TAG, "Ethereum connection result: $result")
+        }
     }
 }
