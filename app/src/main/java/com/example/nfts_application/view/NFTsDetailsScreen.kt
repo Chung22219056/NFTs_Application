@@ -41,11 +41,15 @@ import com.example.nfts_application.component.ETHPriceText
 @Composable
 fun NFTsDetailsScreen(){
 
-    val openAlertDialog = remember { mutableStateOf(false) }
+    val openAlertDialogBuyNFTs = remember { mutableStateOf(false) }
 
     LazyColumn(
 
     ){
+        item{
+            BuyNFTsConfirmationAlertDialog(openAlertDialogBuyNFTs)
+        }
+        
         item{
             Image(
                 modifier = Modifier
@@ -90,7 +94,7 @@ fun NFTsDetailsScreen(){
 
             Spacer(modifier = Modifier.padding(8.dp))
 
-            Button(onClick = { openAlertDialog.value = true }) {
+            Button(onClick = { openAlertDialogBuyNFTs.value = true }) {
                 Icon(imageVector= Icons.Filled.ShoppingCart, contentDescription = "", tint = Color.White)
                 Spacer(modifier = Modifier.padding(8.dp))
                 Text("Buy Now", color = Color.White, fontSize = 20.sp)
@@ -99,37 +103,34 @@ fun NFTsDetailsScreen(){
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-        item{
-            if(openAlertDialog.value){
-                BuyNFTsConfirmationAlertDialog(openAlertDialog)
-            }else{
 
-            }
-        }
+
     }
 }
 
 @Composable
 fun BuyNFTsConfirmationAlertDialog(openAlertDialogStatus: MutableState<Boolean>){
-    AlertDialog(
-        onDismissRequest = {},
-        confirmButton = {
-           Button(onClick = { /*TODO*/ }) {
-               Text("Confirm", color = Color.White, fontSize = 14.sp)
-           }
-        },
-        dismissButton = {
-            Button(onClick = { openAlertDialogStatus.value = false }) {
-                Text("Cancel", color = Color.White, fontSize = 14.sp)
-            }
-        },
-        title = {Text("Confirmation")},
-        text = {Text("Are you sure buy this NFTs")},
-        containerColor = MaterialTheme.colorScheme.secondary,
-        titleContentColor = Color.White,
-        textContentColor = MaterialTheme.colorScheme.onSecondary
+    if(openAlertDialogStatus.value) {
+        AlertDialog(
+            onDismissRequest = {},
+            confirmButton = {
+                Button(onClick = { /*TODO*/ }) {
+                    Text("Confirm", color = Color.White, fontSize = 14.sp)
+                }
+            },
+            dismissButton = {
+                Button(onClick = { openAlertDialogStatus.value = false }) {
+                    Text("Cancel", color = Color.White, fontSize = 14.sp)
+                }
+            },
+            title = { Text("Confirmation") },
+            text = { Text("Are you sure buy this NFTs") },
+            containerColor = MaterialTheme.colorScheme.secondary,
+            titleContentColor = Color.White,
+            textContentColor = MaterialTheme.colorScheme.onSecondary
 
-    )
+        )
+    }
 }
 
 

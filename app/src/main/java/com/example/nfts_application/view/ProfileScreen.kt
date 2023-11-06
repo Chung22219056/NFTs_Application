@@ -14,12 +14,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -45,6 +47,10 @@ import com.example.nfts_application.R
 import com.example.nfts_application.viewModel.EthereumViewModel
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
+
+data class User(val token: String){
+
+}
 @Composable
 fun ProfileScreen(navController: NavHostController){
     NavHost(navController = navController, startDestination = "profileHomeScreen"){
@@ -75,7 +81,7 @@ fun ProfileHomeScreen(){
     }
 
     if(openAlertDialog.value){
-        ConnectEthereumAddressAlert()
+        ConnectEthereumAddressAlert(openAlertDialog)
     }
 }
 
@@ -92,7 +98,8 @@ fun WalletCard(image: Int, title: String, openAlertDialog: MutableState<Boolean>
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                openAlertDialog.value = true
+                if(title == "Ethereum Address")
+                    openAlertDialog.value = true
             }
     ){
         Row (
@@ -122,9 +129,11 @@ fun ConnectMetamask(context: Context) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConnectEthereumAddressAlert(){
+fun ConnectEthereumAddressAlert(openAlertDialog: MutableState<Boolean>){
     var addressInputText = ""
-    Dialog(onDismissRequest = {  }) {
+    var passwordInputText = ""
+
+    Dialog(onDismissRequest = {}) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -143,6 +152,12 @@ fun ConnectEthereumAddressAlert(){
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
+
+                Column ( horizontalAlignment = Alignment.End, modifier = Modifier.fillMaxWidth()){
+                    IconButton(onClick = {  openAlertDialog.value = false }) {
+                        Icon(Icons.Filled.Close, contentDescription = "close")
+                    }
+                }
                 Image(painter = painterResource(R.drawable.ethereum_eth_icon), contentDescription = "ethereum_eth_icon", modifier = Modifier.size(48.dp))
                 Spacer(modifier = Modifier.padding(4.dp))
                 Text("Ethereum Mainnet")
@@ -156,8 +171,8 @@ fun ConnectEthereumAddressAlert(){
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
                 OutlinedTextField(
-                    value = addressInputText,
-                    onValueChange = { addressInputText = it },
+                    value = passwordInputText,
+                    onValueChange = { passwordInputText = it },
                     label = { Text("Password") },
                     maxLines = 1
                 )
