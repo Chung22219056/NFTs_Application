@@ -59,12 +59,8 @@ dependencies {
     implementation ("com.google.accompanist:accompanist-flowlayout:0.20.0")
 
     implementation ("io.metamask.androidsdk:metamask-android-sdk:0.2.1")
-//    implementation(platform("com.walletconnect:android-bom:{BOM version}"))
-//    implementation("com.walletconnect:android-core")
-//    implementation("com.walletconnect:web3wallet")
-//    implementation ("com.github.WalletConnect:kotlin-walletconnect-lib:version")
-//    implementation ("io.metamask.androidsdk:metamask-android-sdk:0.2.1")
-//    implementation ("org.walletconnect.walletconnect:walletconnect:1.1.2")
+    
+
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
