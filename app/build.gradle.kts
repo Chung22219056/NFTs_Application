@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    kotlin("plugin.serialization") version "1.7.10"
 }
 
 android {
@@ -51,12 +52,23 @@ android {
 
 dependencies {
     val nav_version = "2.5.3"
+    val ktor_version = "2.3.5"
 
     implementation ("androidx.compose.material:material-icons-extended:1.0.0-alpha10")
     implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation ("dev.chrisbanes.accompanist:accompanist-coil:0.6.1")
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation ("com.google.accompanist:accompanist-flowlayout:0.20.0")
+
+    implementation ("io.ktor:ktor-client-core:2.1.2")
+    implementation ("io.ktor:ktor-client-cio:2.1.2")
+    implementation ("io.ktor:ktor-client-serialization:2.1.2")
+    implementation ("io.ktor:ktor-client-logging:2.1.2")
+    implementation ("io.ktor:ktor-client-content-negotiation:2.1.2")
+    implementation ("io.ktor:ktor-serialization-kotlinx-json:2.1.2")
+    implementation ("io.coil-kt:coil-compose:2.2.2")
+    implementation("androidx.navigation:navigation-compose:2.5.3")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2-native-mt")
 
     implementation ("io.metamask.androidsdk:metamask-android-sdk:0.2.1")
     

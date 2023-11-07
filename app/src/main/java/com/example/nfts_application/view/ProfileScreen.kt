@@ -1,7 +1,7 @@
 package com.example.nfts_application.view
 
 import android.content.Context
-import android.graphics.drawable.PaintDrawable
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -27,11 +27,12 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -43,28 +44,52 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.nfts_application.KtorClient.httpClient
+import com.example.nfts_application.LoginResponse
 import com.example.nfts_application.R
 import com.example.nfts_application.viewModel.EthereumViewModel
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import io.ktor.client.call.body
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import io.ktor.util.InternalAPI
+import io.metamask.androidsdk.TAG
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 
 
-data class User(val token: String){
-
-}
 @Composable
 fun ProfileScreen(navController: NavHostController){
+    val refresh = remember {
+        mutableStateOf(false)
+    }
     NavHost(navController = navController, startDestination = "profileHomeScreen"){
         composable("profileHomeScreen"){
-            ProfileHomeScreen()
+            if(LoginResponse.loggedUser != null){
+                LoggedProfileView()
+            }else{
+                ProfileHomeScreen(navController, refresh)
+            }
+
+            if(refresh.value){
+                navController.popBackStack()
+                refresh.value = false
+            }
         }
+
     }
 
 
 }
 
 @Composable
-fun ProfileHomeScreen(){
+fun ProfileHomeScreen(navController: NavHostController, refresh: MutableState<Boolean>){
     val openAlertDialog = remember { mutableStateOf(false) }
+    val loggedIn = remember {
+        mutableStateOf(false)
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -81,8 +106,15 @@ fun ProfileHomeScreen(){
     }
 
     if(openAlertDialog.value){
-        ConnectEthereumAddressAlert(openAlertDialog)
+        ConnectEthereumAddressAlert(openAlertDialog, loggedIn)
     }
+
+    if(loggedIn.value){
+        navController.navigate("profileHomeScreen")
+        refresh.value = true
+        loggedIn.value = false
+    }
+
 }
 
 
@@ -98,7 +130,7 @@ fun WalletCard(image: Int, title: String, openAlertDialog: MutableState<Boolean>
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                if(title == "Ethereum Address")
+                if (title == "Ethereum Address")
                     openAlertDialog.value = true
             }
     ){
@@ -129,9 +161,9 @@ fun ConnectMetamask(context: Context) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConnectEthereumAddressAlert(openAlertDialog: MutableState<Boolean>){
-    var addressInputText = ""
-    var passwordInputText = ""
+fun ConnectEthereumAddressAlert(openAlertDialog: MutableState<Boolean>, loggedIn: MutableState<Boolean>){
+    var addressInputText by remember { mutableStateOf("0x9c07aedcD8e2c235e6B3aA36a92c8E2Aa7851940") }
+    var passwordInputText by remember { mutableStateOf("!User1234") }
 
     Dialog(onDismissRequest = {}) {
         Card(
@@ -177,10 +209,42 @@ fun ConnectEthereumAddressAlert(openAlertDialog: MutableState<Boolean>){
                     maxLines = 1
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
-                Button(onClick = { /*TODO*/ }) {
+                Button(onClick = {
+                    GlobalScope.launch {
+                        LoginWithAddress(addressInputText, passwordInputText, loggedIn, openAlertDialog)
+                    }
+
+                }) {
                     Text("Connect", color = Color.White)
                 }
             }
         }
     }
 }
+
+@Serializable
+data class LoginWithAddressBody(
+    val address: String,
+    val password: String
+)
+@OptIn(InternalAPI::class)
+suspend fun LoginWithAddress(address: String, password: String, loggedIn: MutableState<Boolean>, openAlertDialog: MutableState<Boolean>){
+    try {
+        val response = httpClient.post("https://5729-45-144-227-62.ngrok.io/api/login_with_addr"){
+            contentType(ContentType.Application.Json)
+            setBody(LoginWithAddressBody(address, password))
+        }
+        val respBody: LoginResponse = response.body<LoginResponse>()
+        if(respBody.token != ""){
+            LoginResponse.loggedUser = respBody
+        }
+        //Log.d(TAG, LoginResponse.loggedUser?.token.toString())
+        openAlertDialog.value = false
+        loggedIn.value = true
+
+    }catch (e: Exception){
+        Log.e(TAG, "ERROR "+ e)
+    }
+}
+
+

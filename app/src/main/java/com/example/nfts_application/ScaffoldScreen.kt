@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PersonPin
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Shop
@@ -50,6 +51,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.nfts_application.ui.theme.NFTs_ApplicationTheme
 import com.example.nfts_application.view.HomeScreen
 import com.example.nfts_application.view.MarketScreen
+import com.example.nfts_application.view.MoreScreen
 import com.example.nfts_application.view.NFTsDetailsScreen
 import com.example.nfts_application.view.ProfileScreen
 import com.example.nfts_application.view.SearchScreen
@@ -63,6 +65,7 @@ data class BottomNavItem(val title: String, val icon: ImageVector){
             BottomNavItem("Market", Icons.Filled.ShoppingCart),
             BottomNavItem("Search", Icons.Filled.Search),
             BottomNavItem("Profile", Icons.Filled.PersonPin),
+            BottomNavItem("More", Icons.Filled.MoreVert),
         )
     }
 }
@@ -172,6 +175,7 @@ fun ScaffoldScreen() {
                     1 -> MarketScreen(navController)
                     2 -> SearchScreen(navController)
                     3 -> ProfileScreen(navController)
+                    4 -> MoreScreen(navController)
                 }
             }
         }

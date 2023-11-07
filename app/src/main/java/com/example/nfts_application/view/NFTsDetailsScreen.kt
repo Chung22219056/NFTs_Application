@@ -49,7 +49,7 @@ fun NFTsDetailsScreen(){
         item{
             BuyNFTsConfirmationAlertDialog(openAlertDialogBuyNFTs)
         }
-        
+
         item{
             Image(
                 modifier = Modifier
@@ -102,9 +102,6 @@ fun NFTsDetailsScreen(){
 
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-
-
     }
 }
 

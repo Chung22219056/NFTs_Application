@@ -43,6 +43,7 @@ import com.example.nfts_application.R
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun HomeScreen(navController: NavHostController){
+
     NavHost(navController = navController, startDestination = "home"){
         composable("home") {
             LazyColumn(
