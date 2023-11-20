@@ -65,7 +65,7 @@ data class BottomNavItem(val title: String, val icon: ImageVector, val loginRequ
             BottomNavItem("Market", Icons.Filled.ShoppingCart, false),
             BottomNavItem("Search", Icons.Filled.Search, false),
             BottomNavItem("Profile", Icons.Filled.PersonPin, false),
-            BottomNavItem("More", Icons.Filled.MoreVert, true),
+            BottomNavItem("More", Icons.Filled.MoreVert, false),
         )
     }
 }

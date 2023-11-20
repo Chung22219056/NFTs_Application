@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -42,6 +43,10 @@ fun MoreScreen(navController: NavHostController){
         composable("EditProfileScreen"){
             EditProfileScreen()
         }
+
+        composable("BalanceScreen"){
+            BalanceScreen()
+        }
     }
 }
 @Composable
@@ -53,6 +58,7 @@ fun MoreScreenMenu(navController: NavHostController){
             Text("Profile Setting", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.padding(8.dp))
             OptionItem("Edit Profile", Icons.Filled.Edit) { navController.navigate("EditProfileScreen") }
+            OptionItem("Balance", Icons.Filled.Wallet) { navController.navigate("BalanceScreen") }
         }
 
     }
