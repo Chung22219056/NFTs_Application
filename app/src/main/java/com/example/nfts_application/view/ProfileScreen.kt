@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Wallet
@@ -37,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,6 +46,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.nfts_application.API_URL
 import com.example.nfts_application.KtorClient.httpClient
 import com.example.nfts_application.LoginResponse
 import com.example.nfts_application.R
@@ -162,8 +165,8 @@ fun ConnectMetamask(context: Context) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConnectEthereumAddressAlert(openAlertDialog: MutableState<Boolean>, loggedIn: MutableState<Boolean>){
-    var addressInputText by remember { mutableStateOf("0x9c07aedcD8e2c235e6B3aA36a92c8E2Aa7851940") }
-    var passwordInputText by remember { mutableStateOf("!User1234") }
+    var addressInputText by remember { mutableStateOf("0x17C5e57b4A7e9a609EAEA9F192b0Df4A09828C7f") }
+    var passwordInputText by remember { mutableStateOf("AlanPassword") }
 
     Dialog(onDismissRequest = {}) {
         Card(
@@ -206,6 +209,7 @@ fun ConnectEthereumAddressAlert(openAlertDialog: MutableState<Boolean>, loggedIn
                     value = passwordInputText,
                     onValueChange = { passwordInputText = it },
                     label = { Text("Password") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     maxLines = 1
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
@@ -230,7 +234,7 @@ data class LoginWithAddressBody(
 @OptIn(InternalAPI::class)
 suspend fun LoginWithAddress(address: String, password: String, loggedIn: MutableState<Boolean>, openAlertDialog: MutableState<Boolean>){
     try {
-        val response = httpClient.post("https://5729-45-144-227-62.ngrok.io/api/login_with_addr"){
+        val response = httpClient.post("$API_URL/api/login_with_addr"){
             contentType(ContentType.Application.Json)
             setBody(LoginWithAddressBody(address, password))
         }
@@ -241,6 +245,7 @@ suspend fun LoginWithAddress(address: String, password: String, loggedIn: Mutabl
         //Log.d(TAG, LoginResponse.loggedUser?.token.toString())
         openAlertDialog.value = false
         loggedIn.value = true
+        Log.d(TAG, "Success")
 
     }catch (e: Exception){
         Log.e(TAG, "ERROR "+ e)

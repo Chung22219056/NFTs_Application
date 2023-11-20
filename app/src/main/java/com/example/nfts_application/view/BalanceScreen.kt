@@ -1,5 +1,6 @@
 package com.example.nfts_application.view
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +25,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,7 +41,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nfts_application.R
 import com.example.nfts_application.ScaffoldScreen
+import com.example.nfts_application.getBalance
 import com.example.nfts_application.ui.theme.NFTs_ApplicationTheme
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 data class BalanceOption(
@@ -51,9 +60,16 @@ data class BalanceOption(
     }
 }
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun BalanceScreen(){
+    var balance by remember { mutableStateOf(0.0) }
+
+    LaunchedEffect(key1 = true) {
+        balance = getBalance()
+    }
+
     LazyColumn(
 
     ){
@@ -74,7 +90,7 @@ fun BalanceScreen(){
                         Text(text = "Your Ethereum Balance", fontSize = 18.sp)
                     }
                     Spacer(modifier = Modifier.padding(8.dp))
-                    Text("10.000 ETH", fontSize = 38.sp, fontWeight = FontWeight.Bold)
+                    Text(String.format("%.2f", balance) + " ETH", fontSize = 38.sp, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.padding(8.dp))
                 }
             }

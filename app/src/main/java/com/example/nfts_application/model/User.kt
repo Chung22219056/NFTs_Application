@@ -9,6 +9,6 @@ data class User(
     val name: String,
     val biography: String?,
     val email: String,
-    val icon: String,
-    val backdrop: String
+    val icon: String?,
+    val backdrop: String?
 )
