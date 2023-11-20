@@ -58,14 +58,14 @@ import com.example.nfts_application.view.SearchScreen
 import kotlinx.coroutines.launch
 
 
-data class BottomNavItem(val title: String, val icon: ImageVector){
+data class BottomNavItem(val title: String, val icon: ImageVector, val loginRequire: Boolean){
     companion object{
         val data = listOf(
-            BottomNavItem("Home", Icons.Filled.Home),
-            BottomNavItem("Market", Icons.Filled.ShoppingCart),
-            BottomNavItem("Search", Icons.Filled.Search),
-            BottomNavItem("Profile", Icons.Filled.PersonPin),
-            BottomNavItem("More", Icons.Filled.MoreVert),
+            BottomNavItem("Home", Icons.Filled.Home, false),
+            BottomNavItem("Market", Icons.Filled.ShoppingCart, false),
+            BottomNavItem("Search", Icons.Filled.Search, false),
+            BottomNavItem("Profile", Icons.Filled.PersonPin, false),
+            BottomNavItem("More", Icons.Filled.MoreVert, true),
         )
     }
 }
@@ -152,6 +152,9 @@ fun ScaffoldScreen() {
                     contentColor = Color.White
                 ){
                     BottomNavItem.data.forEachIndexed{ index, bottomNavItem ->
+                        if(bottomNavItem.loginRequire && LoginResponse.loggedUser == null){
+                            return@forEachIndexed
+                        }
                         NavigationBarItem(
                             colors = colors,
                             selected = selectedItem == index,

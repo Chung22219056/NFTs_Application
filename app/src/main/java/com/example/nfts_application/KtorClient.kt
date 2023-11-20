@@ -1,5 +1,6 @@
 package com.example.nfts_application
 
+import com.example.nfts_application.model.User
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
@@ -21,16 +22,7 @@ data class LoginResponse(
         var loggedUser: LoginResponse? = null;
     }
 }
-@Serializable
-data class User(
-    val id: Int,
-    val address: String,
-    val name: String,
-    val biography: String?,
-    val email: String,
-    val icon: String,
-    val backdrop: String
-)
+
 object KtorClient {
     val httpClient = HttpClient{
         install(ContentNegotiation){

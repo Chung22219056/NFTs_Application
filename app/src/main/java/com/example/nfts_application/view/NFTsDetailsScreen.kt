@@ -34,6 +34,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.nfts_application.LoginResponse
 import com.example.nfts_application.R
 import com.example.nfts_application.component.ETHPriceText
 
@@ -94,11 +95,14 @@ fun NFTsDetailsScreen(){
 
             Spacer(modifier = Modifier.padding(8.dp))
 
-            Button(onClick = { openAlertDialogBuyNFTs.value = true }) {
-                Icon(imageVector= Icons.Filled.ShoppingCart, contentDescription = "", tint = Color.White)
-                Spacer(modifier = Modifier.padding(8.dp))
-                Text("Buy Now", color = Color.White, fontSize = 20.sp)
+            if(LoginResponse.loggedUser != null){ //only logged user can buy
+                Button(onClick = { openAlertDialogBuyNFTs.value = true }) {
+                    Icon(imageVector= Icons.Filled.ShoppingCart, contentDescription = "", tint = Color.White)
+                    Spacer(modifier = Modifier.padding(8.dp))
+                    Text("Buy Now", color = Color.White, fontSize = 20.sp)
+                }
             }
+
 
             Spacer(modifier = Modifier.padding(8.dp))
         }
