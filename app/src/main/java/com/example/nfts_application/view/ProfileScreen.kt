@@ -26,6 +26,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -202,7 +203,15 @@ fun ConnectEthereumAddressAlert(openAlertDialog: MutableState<Boolean>, loggedIn
                     value = addressInputText,
                     onValueChange = { addressInputText = it },
                     label = { Text("Address") },
-                    maxLines = 1
+                    maxLines = 1,
+                    colors = TextFieldDefaults.textFieldColors(
+                        textColor = Color.Gray,
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        placeholderColor = Color.Gray,
+                        focusedIndicatorColor = MaterialTheme.colorScheme.onPrimary,
+                        focusedLabelColor = MaterialTheme.colorScheme.primary,
+                        focusedLeadingIconColor = MaterialTheme.colorScheme.onPrimary,
+                    )
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
                 OutlinedTextField(
@@ -210,7 +219,15 @@ fun ConnectEthereumAddressAlert(openAlertDialog: MutableState<Boolean>, loggedIn
                     onValueChange = { passwordInputText = it },
                     label = { Text("Password") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    maxLines = 1
+                    maxLines = 1,
+                    colors = TextFieldDefaults.textFieldColors(
+                        textColor = Color.Gray,
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        placeholderColor = Color.Gray,
+                        focusedIndicatorColor = MaterialTheme.colorScheme.onPrimary,
+                        focusedLabelColor = MaterialTheme.colorScheme.primary,
+                        focusedLeadingIconColor = MaterialTheme.colorScheme.onPrimary,
+                    )
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
                 Button(onClick = {
