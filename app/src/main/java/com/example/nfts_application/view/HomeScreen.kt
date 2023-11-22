@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
@@ -24,10 +25,16 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -38,11 +45,20 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import coil.compose.AsyncImage
+import com.example.nfts_application.API_URL
 import com.example.nfts_application.R
+import com.example.nfts_application.getBalance
+import com.example.nfts_application.getNFTs
+import com.example.nfts_application.model.NFTs
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun HomeScreen(navController: NavHostController){
+    var NFTsList by remember { mutableStateOf(listOf<NFTs>()) }
+
+    LaunchedEffect(key1 = true) {
+        NFTsList = getNFTs(5)
+    }
 
     NavHost(navController = navController, startDestination = "home"){
         composable("home") {
@@ -60,8 +76,8 @@ fun HomeScreen(navController: NavHostController){
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ){
-                        items(3){
-                            NFT_Card(navController)
+                        items(NFTsList){ items ->
+                            NFT_Card(navController, items)
                         }
                     }
                 }
@@ -83,8 +99,8 @@ fun HomeScreen(navController: NavHostController){
             }
         }
 
-        composable("NFTsDetail"){
-            NFTsDetailsScreen()
+        composable("NFTsDetail/{nft_id}",){ backStackEntry ->
+            backStackEntry.arguments?.getString("nft_id")?.let { NFTsDetailsScreen(it) }
         }
 
         composable("UserProfileScreen"){
@@ -98,7 +114,7 @@ fun HomeScreen(navController: NavHostController){
 }
 
 @Composable
-fun NFT_Card(navController: NavController){
+fun NFT_Card(navController: NavController, nfts: NFTs){
     ElevatedCard (
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -113,36 +129,29 @@ fun NFT_Card(navController: NavController){
                 .fillMaxSize()
                 .width(180.dp)
         ){
-//                AsyncImage(
-//                    model = "",
-//                    contentDescription = null,
-//                    contentScale = ContentScale.FillWidth,
-//                    modifier = Modifier
-//                        .height(150.dp)
-//                        .width(150.dp),
-//                    alignment = Alignment.Center
-//                )
             Column (
                 modifier = Modifier
                     .fillMaxSize()
                     .width(180.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
-                Image(
-                    painter = painterResource(id = R.drawable.picture_demo),
-                    contentDescription = "",
+                AsyncImage(
+                    model = "$API_URL/api/nft/imageURL?url="+nfts.url,
+                    contentDescription = null,
+                    contentScale = ContentScale.FillWidth,
                     modifier = Modifier
-                        .width(170.dp)
                         .height(170.dp)
+                        .width(170.dp)
                         .clip(RoundedCornerShape(8.dp))
                         .clickable {
-                            navController.navigate("NFTsDetail")
+                            navController.navigate("NFTsDetail/"+nfts.id)
                         },
+                    alignment = Alignment.Center,
                 )
             }
             Spacer(modifier = Modifier.padding(12.dp))
 
-            Text("Travel Monkey Club", fontSize = 18.sp, fontWeight = FontWeight.Bold,maxLines = 1, overflow = TextOverflow.Ellipsis )
+            Text(nfts.name, fontSize = 18.sp, fontWeight = FontWeight.Bold,maxLines = 1, overflow = TextOverflow.Ellipsis )
         }
     }
 }
@@ -194,3 +203,55 @@ fun TopSellerCard(){
 
     }
 }
+
+
+//legacy
+//@Composable
+//fun NFT_Card(navController: NavController, nfts: NFTs){
+//    ElevatedCard (
+//        elevation = CardDefaults.cardElevation(
+//            defaultElevation = 6.dp
+//        ),
+//        colors = CardDefaults.cardColors(
+//            containerColor = MaterialTheme.colorScheme.secondary,
+//        ),
+//    ){
+//        Column(
+//            modifier = Modifier
+//                .padding(12.dp)
+//                .fillMaxSize()
+//                .width(180.dp)
+//        ){
+//            Column (
+//                modifier = Modifier
+//                    .fillMaxSize()
+//                    .width(180.dp),
+//                horizontalAlignment = Alignment.CenterHorizontally
+//            ){
+//                Image(
+//                    painter = painterResource(id = R.drawable.picture_demo),
+//                    contentDescription = "",
+//                    modifier = Modifier
+//                        .width(170.dp)
+//                        .height(170.dp)
+//                        .clip(RoundedCornerShape(8.dp))
+//                        .clickable {
+//                            navController.navigate("NFTsDetail")
+//                        },
+//                )
+////                AsyncImage(
+////                    model = "$API_URL/api/API_URL?url="+nfts.url,
+////                    contentDescription = null,
+////                    contentScale = ContentScale.FillWidth,
+////                    modifier = Modifier
+////                        .height(150.dp)
+////                        .width(150.dp),
+////                    alignment = Alignment.Center
+////                )
+//            }
+//            Spacer(modifier = Modifier.padding(12.dp))
+//
+//            Text("Travel Monkey Club", fontSize = 18.sp, fontWeight = FontWeight.Bold,maxLines = 1, overflow = TextOverflow.Ellipsis )
+//        }
+//    }
+//}

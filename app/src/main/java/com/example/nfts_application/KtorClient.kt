@@ -1,8 +1,8 @@
 package com.example.nfts_application
 
 import android.util.Log
+import com.example.nfts_application.model.NFTs
 import com.example.nfts_application.model.User
-import com.example.nfts_application.view.LoginWithAddressBody
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
@@ -26,7 +26,7 @@ data class LoginResponse(
     }
 }
 
-const val API_URL = "https://270f-146-70-194-252.ngrok.io"
+const val API_URL = "https://be98-45-144-227-52.ngrok.io"
 object KtorClient {
     val httpClient = HttpClient{
         install(ContentNegotiation){
@@ -38,8 +38,6 @@ object KtorClient {
             accept(ContentType.Application.Json)
             header("Authorization", "Bearer " + LoginResponse.loggedUser?.token)
         }
-
-
         expectSuccess = true
     }
 
@@ -63,4 +61,36 @@ suspend fun getBalance(): Double {
         Log.d(TAG, "Balance Error $e")
     }
     return 0.0
+}
+
+suspend fun getNFTs(amount: Int) :List<NFTs>{
+    try{
+        var url = "$API_URL/api/nft/getNFTs"
+        if (amount > 1){
+            url += "?amount=$amount"
+        }
+        val response = KtorClient.httpClient.get(url){
+            contentType(ContentType.Application.Json)
+            accept(ContentType.Application.Json)
+        }
+        return response.body()
+    }catch (e: Exception){
+        Log.d(TAG, "Get NFTs Error $e")
+    }
+    return listOf()
+}
+
+
+suspend fun getNFTDetails(id: String) : NFTs {
+    try{
+        val response = KtorClient.httpClient.get("$API_URL/api/nft/get_nft_details?id=$id"){
+            contentType(ContentType.Application.Json)
+            accept(ContentType.Application.Json)
+        }
+        return response.body()
+    }catch (e: Exception){
+        Log.d(TAG, "Get NFTs Error $e")
+        throw Exception("NFTs Not Found", e)
+    }
+
 }

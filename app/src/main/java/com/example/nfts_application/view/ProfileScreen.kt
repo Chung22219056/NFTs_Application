@@ -47,9 +47,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.nfts_application.API_URL
+import com.example.nfts_application.KtorClient
 import com.example.nfts_application.KtorClient.httpClient
 import com.example.nfts_application.LoginResponse
 import com.example.nfts_application.R
+import com.example.nfts_application.component.ProfileScreen.ConnectEthereumAddressAlert
 import com.example.nfts_application.viewModel.EthereumViewModel
 import io.ktor.client.call.body
 import io.ktor.client.request.post
@@ -81,10 +83,7 @@ fun ProfileScreen(navController: NavHostController){
                 refresh.value = false
             }
         }
-
     }
-
-
 }
 
 @Composable
@@ -104,7 +103,7 @@ fun ProfileHomeScreen(navController: NavHostController, refresh: MutableState<Bo
         Text("Your crypto wallet securely stores your digital goods and cryptocurrencies. Connect to one of our wallet provider or create a new one", textAlign= TextAlign.Center, color = MaterialTheme.colorScheme.onSecondary)
         Spacer(modifier = Modifier.padding(14.dp))
 
-        WalletCard(image = R.drawable.ethereum_eth_icon, title = "Ethereum Address", openAlertDialog)
+        WalletCard(image = R.drawable.ethereum_eth_icon, title = "Ethereum Mainnet", openAlertDialog)
         WalletCard(image = R.drawable.metamask_fox_svg, title ="MetaMask", openAlertDialog)
     }
 
@@ -133,7 +132,7 @@ fun WalletCard(image: Int, title: String, openAlertDialog: MutableState<Boolean>
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                if (title == "Ethereum Address")
+                if (title == "Ethereum Mainnet")
                     openAlertDialog.value = true
             }
     ){
@@ -162,94 +161,8 @@ fun ConnectMetamask(context: Context) {
     Eth.connect()
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ConnectEthereumAddressAlert(openAlertDialog: MutableState<Boolean>, loggedIn: MutableState<Boolean>){
-    var addressInputText by remember { mutableStateOf("0x17C5e57b4A7e9a609EAEA9F192b0Df4A09828C7f") }
-    var passwordInputText by remember { mutableStateOf("AlanPassword") }
 
-    Dialog(onDismissRequest = {}) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(420.dp)
-                .padding(16.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.secondary,
-                contentColor = MaterialTheme.colorScheme.onSecondary
-            )
-        ){
 
-            Column (
-                modifier = Modifier
-                    .padding(12.dp)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ){
 
-                Column ( horizontalAlignment = Alignment.End, modifier = Modifier.fillMaxWidth()){
-                    IconButton(onClick = {  openAlertDialog.value = false }) {
-                        Icon(Icons.Filled.Close, contentDescription = "close")
-                    }
-                }
-                Image(painter = painterResource(R.drawable.ethereum_eth_icon), contentDescription = "ethereum_eth_icon", modifier = Modifier.size(48.dp))
-                Spacer(modifier = Modifier.padding(4.dp))
-                Text("Ethereum Mainnet")
-                Spacer(modifier = Modifier.padding(12.dp))
-
-                OutlinedTextField(
-                    value = addressInputText,
-                    onValueChange = { addressInputText = it },
-                    label = { Text("Address") },
-                    maxLines = 1
-                )
-                Spacer(modifier = Modifier.padding(8.dp))
-                OutlinedTextField(
-                    value = passwordInputText,
-                    onValueChange = { passwordInputText = it },
-                    label = { Text("Password") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    maxLines = 1
-                )
-                Spacer(modifier = Modifier.padding(8.dp))
-                Button(onClick = {
-                    GlobalScope.launch {
-                        LoginWithAddress(addressInputText, passwordInputText, loggedIn, openAlertDialog)
-                    }
-
-                }) {
-                    Text("Connect", color = Color.White)
-                }
-            }
-        }
-    }
-}
-
-@Serializable
-data class LoginWithAddressBody(
-    val address: String,
-    val password: String
-)
-@OptIn(InternalAPI::class)
-suspend fun LoginWithAddress(address: String, password: String, loggedIn: MutableState<Boolean>, openAlertDialog: MutableState<Boolean>){
-    try {
-        val response = httpClient.post("$API_URL/api/login_with_addr"){
-            contentType(ContentType.Application.Json)
-            setBody(LoginWithAddressBody(address, password))
-        }
-        val respBody: LoginResponse = response.body<LoginResponse>()
-        if(respBody.token != ""){
-            LoginResponse.loggedUser = respBody
-        }
-        //Log.d(TAG, LoginResponse.loggedUser?.token.toString())
-        openAlertDialog.value = false
-        loggedIn.value = true
-        Log.d(TAG, "Success")
-
-    }catch (e: Exception){
-        Log.e(TAG, "ERROR "+ e)
-    }
-}
 
 

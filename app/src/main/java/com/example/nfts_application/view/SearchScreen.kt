@@ -39,7 +39,7 @@ fun SearchScreen(navController: NavHostController){
         }
 
         composable("NFTsDetail"){
-            NFTsDetailsScreen()
+            NFTsDetailsScreen("1")
         }
     }
 }
@@ -63,8 +63,6 @@ fun SearchHomeScreen(navController: NavHostController){
                 focusedIndicatorColor = MaterialTheme.colorScheme.onPrimary,
                 focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
                 focusedLeadingIconColor = MaterialTheme.colorScheme.onPrimary,
-
-
             )
         )
 

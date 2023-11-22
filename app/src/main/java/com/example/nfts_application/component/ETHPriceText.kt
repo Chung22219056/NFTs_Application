@@ -25,7 +25,7 @@ fun ETHPriceText(price: String){
             contentDescription = "",
             contentScale = ContentScale.Crop
         )
-        Text(price, fontSize = 18.sp)
+        Text("$price ETH", fontSize = 18.sp)
     }
 
 }

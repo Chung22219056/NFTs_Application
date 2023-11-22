@@ -16,8 +16,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.Edit
@@ -34,11 +37,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -48,8 +54,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import coil.compose.AsyncImage
+import com.example.nfts_application.API_URL
 import com.example.nfts_application.R
 import com.example.nfts_application.component.ETHPriceText
+import com.example.nfts_application.getNFTs
+import com.example.nfts_application.model.NFTs
 
 @Composable
 fun MarketScreen(navController: NavHostController){
@@ -58,8 +68,8 @@ fun MarketScreen(navController: NavHostController){
             MarketHomeScreen(navController)
         }
 
-        composable("NFTsDetail"){
-            NFTsDetailsScreen()
+        composable("NFTsDetail/{nft_id}",){ backStackEntry ->
+            backStackEntry.arguments?.getString("nft_id")?.let { NFTsDetailsScreen(it) }
         }
     }
 }
@@ -67,6 +77,11 @@ fun MarketScreen(navController: NavHostController){
 @Composable
 fun MarketHomeScreen(navController: NavHostController){
     var expanded by remember { mutableStateOf(false) }
+
+    var nftsList by remember { mutableStateOf(listOf<NFTs>()) }
+    LaunchedEffect(key1 = true) {
+        nftsList = getNFTs(-1)
+    }
 
     Column {
         OutlinedButton(
@@ -102,8 +117,8 @@ fun MarketHomeScreen(navController: NavHostController){
         Divider(color=MaterialTheme.colorScheme.onSecondary)
 
         LazyColumn{
-            items(5){
-                MarketNFTCard(navController)
+            items(nftsList){ items ->
+                MarketNFTCard(navController, items)
             }
         }
     }
@@ -113,11 +128,11 @@ fun MarketHomeScreen(navController: NavHostController){
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun MarketNFTCard(navController: NavHostController){
+fun MarketNFTCard(navController: NavHostController, nfts: NFTs){
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { navController.navigate("NFTsDetail") },
+            .clickable { navController.navigate("NFTsDetail/"+nfts.id) },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.secondary,
         ),
@@ -128,11 +143,18 @@ fun MarketNFTCard(navController: NavHostController){
             Column (
                 modifier = Modifier.fillMaxHeight()
             ){
-                Image(
+//                Image(
+//                    modifier = Modifier.size(100.dp),
+//                    painter = painterResource(id = R.drawable.picture_demo),
+//                    contentScale = ContentScale.Crop,
+//                    contentDescription = ""
+//                )
+                AsyncImage(
+                    model = nfts.getImageURL(),
+                    contentDescription = null,
                     modifier = Modifier.size(100.dp),
-                    painter = painterResource(id = R.drawable.picture_demo),
                     contentScale = ContentScale.Crop,
-                    contentDescription = ""
+                    alignment = Alignment.Center,
                 )
             }
 
@@ -143,11 +165,11 @@ fun MarketNFTCard(navController: NavHostController){
                     .fillMaxSize()
             ){
                 
-                Text("Travel Monkey Club", fontSize = 20.sp, color = Color.White, fontWeight = FontWeight.Bold)
+                Text(nfts.name, fontSize = 20.sp, color = Color.White, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.padding(2.dp))
                 Text("author", color = MaterialTheme.colorScheme.onSecondary, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.padding(10.dp))
-                ETHPriceText(price = "0.8998000")
+                ETHPriceText(price = nfts.price.toString())
                 
             }
         }
