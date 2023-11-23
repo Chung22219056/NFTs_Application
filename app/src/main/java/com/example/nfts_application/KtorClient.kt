@@ -26,7 +26,7 @@ data class LoginResponse(
     }
 }
 
-const val API_URL = "https://be98-45-144-227-52.ngrok.io"
+const val API_URL = "https://d126-45-144-227-52.ngrok.io"
 object KtorClient {
     val httpClient = HttpClient{
         install(ContentNegotiation){

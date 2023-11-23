@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.UploadFile
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
@@ -47,6 +48,10 @@ fun MoreScreen(navController: NavHostController){
         composable("BalanceScreen"){
             BalanceScreen()
         }
+
+        composable("CreateNFTsScreen"){
+            CreateNFTsScreen()
+        }
     }
 }
 @Composable
@@ -59,6 +64,12 @@ fun MoreScreenMenu(navController: NavHostController){
             Spacer(modifier = Modifier.padding(8.dp))
             OptionItem("Edit Profile", Icons.Filled.Edit) { navController.navigate("EditProfileScreen") }
             OptionItem("Balance", Icons.Filled.Wallet) { navController.navigate("BalanceScreen") }
+            Spacer(modifier = Modifier.padding(12.dp))
+        }
+
+        item{
+            Text("My NFTs", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+            OptionItem("Create NFTs", Icons.Filled.UploadFile) { navController.navigate("CreateNFTsScreen") }
         }
 
     }

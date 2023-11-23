@@ -138,7 +138,7 @@ fun NFT_Card(navController: NavController, nfts: NFTs){
                 AsyncImage(
                     model = "$API_URL/api/nft/imageURL?url="+nfts.url,
                     contentDescription = null,
-                    contentScale = ContentScale.FillWidth,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .height(170.dp)
                         .width(170.dp)

@@ -1,5 +1,6 @@
 package com.example.nfts_application
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
